@@ -1,6 +1,6 @@
 const { bcryptConfig } = require("../config/index");
 const bcrypt = require("bcrypt");
-const { generate } = require("../util/jwt.util");
+const { generateToken } = require("../util/jwt.util");
 
 const resolvers = {
   Query: {
@@ -61,7 +61,7 @@ const resolvers = {
           data: input
         });
 
-        // const data = await generate(createUser);
+        // const data = await generateToken(createUser);
         return {
           user: createUser,
         };
@@ -84,7 +84,7 @@ const resolvers = {
           if (user && user.password) {
             if (bcrypt.compareSync(input.password, user.password)) {
               delete user.password;
-              const token = await generate(user);
+              const token = await generateToken(user);
               console.log("token------", token);
               return {
                 ...user,
