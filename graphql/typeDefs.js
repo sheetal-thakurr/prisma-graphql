@@ -26,6 +26,7 @@ const typeDefs = gql`
   type Query {
     getUserById(id: ID!): User
     getAllUsers: [User]!
+    loggedInUser: User
   }
 
   type authData {
@@ -34,10 +35,8 @@ const typeDefs = gql`
   }
   type Mutation {
     signInUser(input: CreateUser!): authData!
-  }
-
-  type Mutation {
     loginUser(input: login!): authData
+
   }
 
   input login {

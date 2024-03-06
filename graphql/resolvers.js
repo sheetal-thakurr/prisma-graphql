@@ -1,14 +1,11 @@
 const { bcryptConfig } = require("../config/index");
 const bcrypt = require("bcrypt");
-// const { generateSignInToken, generate } = require("../middleware/passport");
 const { generate } = require("../util/jwt.util");
-
-
-
 
 const resolvers = {
   Query: {
     getUserById: async (_parent, args) => {
+
       const user = await prisma.user.findFirst({
         where: {
           id: parseInt(args.id)
@@ -19,6 +16,23 @@ const resolvers = {
       }
 
       return user;
+    },
+
+    loggedInUser: async (_parent, _args, context) => {
+      try {
+        console.log("context-----", context);
+        const user = await prisma.user.findFirst({
+          where: {
+            id: parseInt(context.id)
+          }
+        })
+        if (!user) {
+          throw new Error("User not found")
+        }
+        return user;
+      } catch (error) {
+        throw new Error("somthing went wrong!")
+      }
     },
 
     getAllUsers: async () => {
@@ -69,17 +83,19 @@ const resolvers = {
         } else {
           if (user && user.password) {
             if (bcrypt.compareSync(input.password, user.password)) {
+              delete user.password;
               const token = await generate(user);
               console.log("token------", token);
               return {
-                user: user,
-                token: token
+                ...user,
+                token
               }
             }
           }
         }
 
       } catch (error) {
+        console.log("error------", error);
         throw new Error(error.message);
       }
     }
