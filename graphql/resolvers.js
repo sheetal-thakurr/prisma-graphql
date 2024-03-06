@@ -62,9 +62,7 @@ const resolvers = {
         });
 
         // const data = await generateToken(createUser);
-        return {
-          user: createUser,
-        };
+        return createUser;
       } catch (error) {
         throw new Error(error.message);
       }
@@ -87,8 +85,8 @@ const resolvers = {
               const token = await generateToken(user);
               console.log("token------", token);
               return {
-                ...user,
-                token
+                user: user,
+                token: token
               }
             }
           }

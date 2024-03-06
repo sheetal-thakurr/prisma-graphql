@@ -34,7 +34,7 @@ const typeDefs = gql`
     token: String!
   }
   type Mutation {
-    signInUser(input: CreateUser!): authData!
+    signInUser(input: CreateUser!): User!
     loginUser(input: login!): authData
 
   }
