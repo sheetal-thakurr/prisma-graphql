@@ -35,8 +35,25 @@ const resolvers = {
       }
     },
 
-    getAllUsers: async () => {
-      return await prisma.user.findMany();
+    getAllUsers: async (_parent, args) => {
+      try {
+        const users = await prisma.user.findMany({
+          skip: parseInt(args.skip),
+          take: parseInt(args.limit),
+        });
+        const totalUsers = await prisma.user.count();
+
+        return {
+          skip: parseInt(args.skip),
+          limit: parseInt(args.limit),
+          total: totalUsers,
+          users: users
+        }
+
+      } catch (error) {
+        console.log("error:", error);
+        throw new Error(error.message)
+      }
     },
   },
 

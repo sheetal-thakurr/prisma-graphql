@@ -23,16 +23,24 @@ const typeDefs = gql`
     deleted
   }
 
-  type Query {
-    getUserById(id: ID!): User
-    getAllUsers: [User]!
-    loggedInUser: User
-  }
-
   type authData {
     user: User!
     token: String!
   }
+
+  type allUsers {
+    skip: Int!
+    limit: Int!
+    total: Int!
+    users: [User!]!
+  }
+
+  type Query {
+    getUserById(id: ID!): User
+    getAllUsers(skip: Int, limit: Int): allUsers!
+    loggedInUser: User
+  }
+
   type Mutation {
     signInUser(input: CreateUser!): User!
     loginUser(input: login!): authData
